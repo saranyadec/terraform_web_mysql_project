@@ -142,10 +142,6 @@ resource "aws_security_group" "web_sg" {
   }
 }
 
-# resource "aws_key_pair" "deployer" {
-#   key_name   = "deployer-key"
-#   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD3F6tyPEFEzV0LX3X8BsXdMsQz1x2cEikKDEY0aIj41qgxMCP/iteneqXSIFZBp5vizPvaoIR3Um9xK7PGoW8giupGn+EPuxIA4cDM4vzOqOkiMPhz5XK0whEjkVzTo4+S0puvDZuwIsdiW9mxhJc7tgBNL0cYlWSYVkz4G/fslNfRPW5mYAM49f4fhtxPb5ok4Q2Lg9dPKVHO/Bgeu5woMc7RY0p1ej6D4CKFE6lymSDJpW0YHX/wqE9+cfEauh7xZcG0q9t2ta6F6fmX0agvpFyZo8aFbXeUBr7osSCJNgvavWbM/06niWrOvYX2xwWdhXmXSrbX8ZbabVohBK41 email@example.com"
-# }
 
 resource "tls_private_key" "oei-key" {
   algorithm = "RSA"
@@ -159,7 +155,6 @@ resource "aws_key_pair" "oei-key-pair" {
 
 # Create an EC2 instance for the web server
 resource "aws_instance" "web" {
-#   ami             = "ami-09298640a92b2d12c"
   ami =  "ami-0c2af51e265bd5e0e"
   instance_type   = var.instance_type
   key_name      = aws_key_pair.oei-key-pair.key_name
@@ -209,7 +204,7 @@ resource "aws_security_group" "rds_sg" {
 
 resource "aws_db_subnet_group" "main" {
   name       = "rds-subnet-group"
-  subnet_ids = [aws_subnet.private_web.id ,aws_subnet.private_db.id] # Private DB Subnet
+  subnet_ids = [aws_subnet.private_web.id ,aws_subnet.private_db.id] 
   tags = {
     Name = "mysql-rds-subnet-group"
   }
@@ -219,20 +214,20 @@ resource "aws_db_subnet_group" "main" {
 resource "aws_db_instance" "mysql" {
    allocated_storage      = 20
    max_allocated_storage  = 150
-   storage_type           = "gp2"  # General Purpose SSD storage
+   storage_type           = "gp2"  
    identifier             = "myrdsdev"
    engine                 = "MySQL"
    engine_version         = "8.0.35"
-   instance_class         = "db.t3.micro"  # Choose an instance class based on your workload
-   username               = "admin"  # Replace with your desired username
-   password               = "Passw!123"  # Replace with a strong password
-   db_name                = "test_mysql_db"  # Name of the database
-   backup_retention_period = 7  # Number of days to retain backups
-   publicly_accessible    = true  # Make the instance publicly accessible (consider the security implications)
-   skip_final_snapshot    = true  # Skip final snapshot when destroying the instance
-   vpc_security_group_ids = [aws_security_group.rds_sg.id]  # Associate with the security group
+   instance_class         = "db.t3.micro"  
+   username               = "admin" 
+   password               = "Passw!123"  
+   db_name                = "test_mysql_db"  
+   backup_retention_period = 7  
+   publicly_accessible    = true  
+   skip_final_snapshot    = true  
+   vpc_security_group_ids = [aws_security_group.rds_sg.id]  
    db_subnet_group_name = aws_db_subnet_group.main.name
    tags = {
-     Name = "devrds"  # Tag your instance for easy identification
+     Name = "devrds"  
    }
 }
