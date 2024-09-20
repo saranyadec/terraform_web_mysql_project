@@ -8,7 +8,7 @@ This project involves provisioning cloud resources using Terraform to set up a b
 *Prerequisites*
 
     Terraform installation (Version: 1.8.3)
-    AWS CLI
+    AWS CLI(version 2)
     AWS credentials configured (~/.aws/credentials)
     Visual Studio Code
 
